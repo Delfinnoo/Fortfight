@@ -1,6 +1,7 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
+<!doctype html>
+<html lang="en">
+
+<head>
     <meta charset="UTF-8" />
     <title>Making your first Phaser 3 Game - Part 1</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
@@ -10,36 +11,130 @@
         }
     </style>
 </head>
+
 <body>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    var config = {
-        type: Phaser.AUTO,
-        width: 600,
-        height: 800,
-        scene: {
-            preload: preload,
-            create: create,
-            update: update
+        var config = {
+            type: Phaser.AUTO,
+            width: 960,
+            height: 960,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: true
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        var player1;
+        var cursors;
+        var cameras;
+        var game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image("bibli", "./assets/bibli.png");
+            this.load.tilemapTiledJSON("map", "./assets/biblo.json");
+            this.load.spritesheet("player1", "./assets/Mono.png", { frameWidth: 72, frameHeight: 72, });
         }
-    };
 
-    var game = new Phaser.Game(config);
+        function create() {
+            cursors = this.input.keyboard.createCursorKeys();
+           
+            //Mapa e Colisão
+            const map = this.make.tilemap({ key: "map" });
+            const tileset = map.addTilesetImage("bibli", "bibli");
+            const belowLayer = map.createLayer("belowplayer", tileset, 0, 0);
+            const worldLayer = map.createLayer("world", tileset, 0, 0);
+            worldLayer.setCollisionByProperty({ collides: true });
+           
+            //Spawn//Tamanho do bloco de colisão do Player
+            player1 = this.physics.add.sprite(47, 800, "player1", 0).setScale(0.4);
+            player1.setSize(40, 72, true);
+           
+            //Colisão com Player e WorldLayer
+            var physics = this.physics;
+            physics.add.collider(player1, worldLayer);
+            player1.setCollideWorldBounds(true);
+            
+            //Animaçao
+            this.anims.create({
+                key: "down1",
+                frames: this.anims.generateFrameNumbers("player1", { start: 0, end: 3 }),
+                frameRate: 8,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: "left1",
+                frames: this.anims.generateFrameNumbers("player1", { start: 4, end: 7 }),
+                frameRate: 8,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: "turn1",
+                frames: [{ key: "player1", frame: 0 }],
+                frameRate: 20,
+            });
+            this.anims.create({
+                key: "right1",
+                frames: this.anims.generateFrameNumbers("player1", { start: 8, end: 11 }),
+                frameRate: 8,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: "up1",
+                frames: this.anims.generateFrameNumbers("player1", { start: 12, end: 15 }),
+                frameRate: 8,
+                repeat: -1,
+            });
 
-    function preload ()
-    {
-    }
+        var cameras = this.cameras;
+        this.cameras.main.setBounds(0, 0, 1280, 800);
+        this.physics.world.setBounds(0, 0, 1280, 800);
+        this.cameras.main.setZoom(5);
+        cameras.main.startFollow(player1);
 
-    function create ()
-    {
-    }
+        }
 
-    function update ()
-    {
-    }
+        function update() {
+            if (cursors.down.isDown) {
+                player1.setVelocityY(160);
 
-</script>
+                player1.anims.play('down1', true);
+            }
+            else if (cursors.left.isDown) {
+                player1.setVelocityX(-160);
+
+                player1.anims.play('left1', true);
+            }
+            else if (cursors.right.isDown) {
+                player1.setVelocityX(160);
+
+                player1.anims.play('right1', true);
+            }
+            else if (cursors.up.isDown) {
+                player1.setVelocityY(-160);
+
+                player1.anims.play('up1', true);
+            }
+            else {
+                player1.setVelocityX(0);
+                player1.setVelocityY(0);
+                player1.anims.play('turn1');
+            }
+        }
+
+
+
+    </script>
 
 </body>
+
 </html>
