@@ -37,12 +37,26 @@
         var player1;
         var cursors;
         var cameras;
+        var book1;
+        var book2;
+        var book3;
+        var book4;
+        var book5;
+        var book6;
+        var book7;
         var game = new Phaser.Game(config);
 
         function preload() {
             this.load.image("bibli", "./assets/bibli.png");
             this.load.tilemapTiledJSON("map", "./assets/biblo.json");
             this.load.spritesheet("player1", "./assets/Mono.png", { frameWidth: 72, frameHeight: 72, });
+            this.load.spritesheet("book1", "./assets/book1.png", {frameWidth: 1000, frameHeight: 1000,});
+            this.load.spritesheet("book2", "./assets/book2.png", { frameWidth: 1000, frameHeight: 1000, });
+            this.load.spritesheet("book3", "./assets/book3.png", { frameWidth: 1000, frameHeight: 1000, });
+            this.load.spritesheet("book4", "./assets/book4.png", { frameWidth: 1000, frameHeight: 1000, });
+            this.load.spritesheet("book5", "./assets/book5.png", { frameWidth: 1000, frameHeight: 1000, });
+            this.load.spritesheet("book6", "./assets/book6.png", {frameWidth: 1000, frameHeight: 1000,});
+            this.load.spritesheet("book7", "./assets/book7.png", { frameWidth: 1000, frameHeight: 1000, });
         }
 
         function create() {
@@ -94,13 +108,21 @@
                 frameRate: 8,
                 repeat: -1,
             });
-
+        //Camera
         var cameras = this.cameras;
-        this.cameras.main.setBounds(0, 0, 1280, 800);
-        this.physics.world.setBounds(0, 0, 1280, 800);
-        this.cameras.main.setZoom(5);
+        this.cameras.main.setBounds(0, 0, 960, 960);
+        this.physics.world.setBounds(0, 0, 960, 960);
+        this.cameras.main.setZoom(4);
         cameras.main.startFollow(player1);
 
+        //Itens
+        book1 = this.physics.add.sprite(718, 400, "book1").setScale(0.4);
+        book2 = this.physics.add.sprite(46, 752, "book2").setScale(0.4);
+        book3 = this.physics.add.sprite(494, 208, "book3").setScale(0.4);
+        book4 = this.physics.add.sprite(654, 272, "book4").setScale(0.4);
+        book5 = this.physics.add.sprite(440, 810, "book5").setScale(0.4);
+        book6 = this.physics.add.sprite(500, 50, "book6").setScale(0.4);
+        book7 = this.physics.add.sprite(39, 265, "book7").setScale(0.4);
         }
 
         function update() {
