@@ -87,7 +87,7 @@
            
             //Spawn//Tamanho do bloco de colisão do Player
             player1 = this.physics.add.sprite(47, 800, "player1", 0).setScale(0.4);
-            player1.setSize(38, 72, true);
+            player1.setSize(38, 69, true);
            
             //Colisão com Player e WorldLayer
             var physics = this.physics;
@@ -140,10 +140,35 @@
         book6 = this.physics.add.sprite(495, 50, "book6").setScale(0.4);
         book7 = this.physics.add.sprite(39, 265, "book7").setScale(0.4); //ok
         //Coleta dos livros
-        sombra = this.physics.add.sprite(0, 0, "sombra")
-        var sombra = this.sombra
-        sombra.main.startFollow(player1);
+        this.physics.add.overlap(player1, book1, collectbook, null, this);
+        this.physics.add.overlap(player1, book2, collectbook, null, this);
+        this.physics.add.overlap(player1, book3, collectbook, null, this);
+        this.physics.add.overlap(player1, book4, collectbook, null, this);
+        this.physics.add.overlap(player1, book5, collectbook, null, this);
+        this.physics.add.overlap(player1, book6, collectbook, null, this);
+        this.physics.add.overlap(player1, book7, collectbook, null, this);
+        //Inventario
+        var add = this.add;
+        inventoryText = add.text(100, 100, "0", 
+        { fontSize: "64px",
+        fill: "#fff",});
+       
+        //sombra = this.physics.add.sprite(0, 0, "sombra")
+        //var sombra = this.sombra
+        //sombra.main.startFollow(player1);
+        //const rt = this.make.renderTexture({
+         //       width,
+          //      height
+          //  }, true)
 
+            // fill it with black
+          //  rt.fill(0x000000, 1)
+
+            // draw the floorLayer into it
+         //   rt.draw(belowplayer)
+
+            // set a dark blue tint
+         //   rt.setTint(0x0a2948)
         }
 
         function update() {
@@ -173,14 +198,16 @@
                 player1.anims.play('turn1');
             }
 
-       
-
                
         }
+        function collectbook(player1, book1) {
+                //chave some quando coletada
+                book1.disableBody(true, true);}
+        
+    
 
 
-
-    </script>
+</script>
 
 </body>
 
