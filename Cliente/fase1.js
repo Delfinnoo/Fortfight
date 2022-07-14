@@ -1,3 +1,5 @@
+import { win } from "./win.js";
+import { restart } from "./restart.js";
 
 
 var fase1 = new Phaser.Scene("fase 1");
@@ -44,7 +46,7 @@ fase1.preload = function () {
     this.load.spritesheet("book5", "./assets/book5.png", { frameWidth: 1000, frameHeight: 1000, });
     this.load.spritesheet("book6", "./assets/book6.png", { frameWidth: 1000, frameHeight: 1000, });
     this.load.spritesheet("book7", "./assets/book7.png", { frameWidth: 1000, frameHeight: 1000, });
-    this.load.spritesheet("sombra", "./assets/Sombra.png", { frameWidth: 960, frameHeight: 960, });
+    this.load.spritesheet("sombra", "./assets/sombra.png", { frameWidth: 960, frameHeight: 960, });
     this.load.spritesheet("saida", "./assets/saida.png", { frameWidth: 19, frameHeight: 18,
 });
 }
@@ -53,7 +55,7 @@ fase1.create = function () {
     var time = this.time;
     cursors = this.input.keyboard.createCursorKeys();
     timer = -1;
-    
+   
     //Mapa e Colisão
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("bibli", "bibli");
@@ -61,19 +63,8 @@ fase1.create = function () {
     const worldLayer = map.createLayer("world", tileset, 0, 0);
     worldLayer.setCollisionByProperty({ collides: true });
 
-    //const width = this.scale.width
-    //const height = this.scale.height
-    //const rt = this.make.renderTexture({width, height}, true)
-    //rt.fill("0x000000, 1")
-    //rt.draw("belowplayer")
-    //rt.setTint("0x0a2948")
     var add = this.add;
- inventoryText = add.text(800, 100, "0",
-        { fontSize: "64px", fill: "#fff", });//.setScale(0.4);
-    timerText = this.add.text(400, 50, "150", {
-        fontSize: "64px",
-        fill: "#fff",
-    });
+ 
     //Spawn//Tamanho do bloco de colisão do Player
     player1 = this.physics.add.sprite(47, 850, "player1", 0).setScale(0.4);
     player1.setSize(38, 65, true);
@@ -117,7 +108,7 @@ fase1.create = function () {
     var cameras = this.cameras;
     //this.cameras.main.setBounds(0, 0, 960, 960);
     this.physics.world.setBounds(0, 0, 960, 960);
-    //this.cameras.main.setZoom(4);
+    this.cameras.main.setZoom(2);
     cameras.main.startFollow(player1);
     cameras.main.setBounds(0, 0, 960, 960);
 
@@ -138,21 +129,19 @@ fase1.create = function () {
     this.physics.add.overlap(player1, book5, collectbook, null, this);
     this.physics.add.overlap(player1, book6, collectbook, null, this);
     this.physics.add.overlap(player1, book7, collectbook, null, this);
-    //Inventario
+    //Inventario 
+    sombra = this.physics.add.sprite(100, 800, "sombra")
     this.physics.add.overlap(player1, saida, touchSaida, null, this);
-
+    timer = 5;
     timedEvent = time.addEvent({
         delay: 1000,
         callback: countdown,
         callbackScope: this,
         loop: true,
     });
-    
-    
-    //sombra = this.physics.add.sprite(100, 800, "sombra")
-    //var sombra = this.sombra
-    //sombra.main.startFollow(player1);
-    
+    inventoryText = add.text(10, 770, "0", { fontSize: "64px", fill: "#fff", }).setScale(0.2);
+    timerText = this.add.text(280, 770, "150", { fontSize: "64px", fill: "#fff", }).setScale(0.2);
+    timerText.setScrol
 }
 
 fase1.update = function (time, delta) {
@@ -181,13 +170,25 @@ fase1.update = function (time, delta) {
         player1.setVelocityY(0);
         player1.anims.play('turn1');
     }
-    inventoryText.x = player1.body.position.x;
-    inventoryText.y = player1.body.position.y;
-    timerText.x = player1.body.position.x;
-    timerText.y = player1.body.position.y;
-    //sombra.x = player1.body.position.x;
-    //sombra.y = player1.body.position.y;
+    //inventoryText.x = player1.body.position.x;
+    //inventoryText.y = player1.body.position.y;
+    //timerText.x = player1.body.position.x;
+    //timerText.y = player1.body.position.y;
+    sombra.x = player1.body.position.x;
+    sombra.y = player1.body.position.y;
+   
 
+}
+function touchSaida(player1, saida) {
+    if (inventory === 7 && timer > 0) {
+        //musicagameplay.stop();
+        this.scene.stop(fase1);
+        this.scene.start(win);
+    } else if (timer === 0) {
+        //musicagameplay.stop();
+        this.scene.stop(fase1);
+        this.scene.start(restart);
+    }
 }
 function collectbook(player1, book1) {
     //chave some quando coletada
@@ -200,18 +201,5 @@ function countdown() {
     timer -= 1;
     timerText.setText(timer);
 }
-function touchSaida(player1, saida) {
-    if (inventory === 7 //&& timer > 0) {
-        //musicagameplay.stop();
-        this.scene.stop(fase1);
-        this.scene.start(win);
-    } else if (timer === 0) {
-        musicagameplay.stop();
-        this.scene.stop(cena1);
-        this.scene.start(cena2);
-    }
-}
-
-
 
 export { fase1 };

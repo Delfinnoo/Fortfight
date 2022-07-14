@@ -1,6 +1,7 @@
 // Importar todas as cenas
 import { cena0 } from "./cena0.js";
 import { fase1 } from "./fase1.js";
+import { win } from "./win.js";
 
 // Configuração do jogo
 const config = {
@@ -21,7 +22,7 @@ const config = {
     width:  640,
     height: 360,
   },
-  scene: [cena0, fase1,],
+  scene: [cena0, fase1, win],
 };
 
 // Criar o objeto principal
