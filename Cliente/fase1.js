@@ -23,8 +23,10 @@ var book6;
 var book7;
 var sombra;
 var camera0;
-var wingame
-var restartgame
+var wingame;
+var restartgame;
+var pointer;
+var socket;
 var camera0
 var ice_servers = {
     iceServers: [
@@ -51,15 +53,13 @@ fase1.preload = function () {
     this.load.spritesheet("book6", "./assets/book6.png", { frameWidth: 1000, frameHeight: 1000, });
     this.load.spritesheet("book7", "./assets/book7.png", { frameWidth: 1000, frameHeight: 1000, });
     this.load.spritesheet("sombra", "./assets/sombra.png", { frameWidth: 960, frameHeight: 960, });
-    this.load.spritesheet("saida", "./assets/saida.png", {
-        frameWidth: 19, frameHeight: 18,
-    });
+    this.load.spritesheet("saida", "./assets/saida.png", { frameWidth: 19, frameHeight: 18, });
+    this.load.image("fullscreen", "./assets/fullscreen.png");
 }
 
 fase1.create = function () {
     var time = this.time;
     cursors = this.input.keyboard.createCursorKeys();
-    timer = -1;
     wingame = false
     restartgame = false
 
@@ -111,16 +111,66 @@ fase1.create = function () {
         frameRate: 8,
         repeat: -1,
     });
+    // Interação por toque de tela (até 2 toques simultâneos 0 a 1)
+    pointer = this.input.addPointer(1);
+
     //Camera
     var cameras = this.cameras;
-
     //this.cameras.main.setBounds(0, 0, 960, 960);
     this.physics.world.setBounds(0, 0, 960, 960);
+    //this.cameras.main.setZoom(4);
+    cameras.main.startFollow(player1);
     cameras.main.setBounds(0, 0, 960, 960);
-    camera0 = this.cameras.add(23, 400, 960, 960);
-    cameras.startFollow(player1);
-    var camera0 = this.camera0
-    this.cameras.setZoom(1);
+    
+    var button = this.add
+        .image(800 - 16, 16, "fullscreen", 0)
+        .setOrigin(1, 0)
+        .setInteractive()
+        .setScrollFactor(1);
+    
+    button.on("pointerup",   function () {
+            if (this.scale.isFullscreen) {
+                button.setFrame(0);
+                this.scale.stopFullscreen();
+            } else {
+                button.setFrame(1);
+                this.scale.startFullscreen();
+            }
+        },
+        this );
+
+    // Tecla "F" também ativa/desativa tela cheia
+    var FKey = this.input.keyboard.addKey("F");
+    FKey.on(
+        "down",
+        function () {
+            if (this.scale.isFullscreen) {
+                button.setFrame(0);
+                this.scale.stopFullscreen();
+            } else {
+                button.setFrame(1);
+                this.scale.startFullscreen();
+            }
+        },
+        this
+    );
+    // D-pad
+    var esquerda = this.add
+        .image(50, 400, "esquerda", 0)
+        .setInteractive()
+        .setScrollFactor(0);
+    var direita = this.add
+        .image(125, 400, "direita", 0)
+        .setInteractive()
+        .setScrollFactor(0);
+    var cima = this.add
+        .image(750, 325, "cima", 0)
+        .setInteractive()
+        .setScrollFactor(0);
+    var baixo = this.add
+        .image(750, 400, "baixo", 0)
+        .setInteractive()
+        .setScrollFactor(0);
 
     //Itens
     book1 = this.physics.add.sprite(495, 385, "book1").setScale(0.4); //Vermelho OK
@@ -157,8 +207,8 @@ fase1.update = function (time, delta) {
     if (wingame === true) {
         //musicagameplay.stop();
         this.scene.stop(fase1);
-        this.scene.start(win);
-    } else if (restartgame === true) {
+        this.scene.start(win);}
+         else if (restartgame === true) {
         //musicagameplay.stop();
         this.scene.stop(fase1);
         this.scene.start(restart);
@@ -189,6 +239,122 @@ fase1.update = function (time, delta) {
         player1.setVelocityY(0);
         player1.anims.play('turn1');
     }
+    // D-pad
+    var esquerda = this.add
+        .image(50, 400, "esquerda", 0)
+        .setInteractive()
+        .setScrollFactor(0);
+    var direita = this.add
+        .image(125, 400, "direita", 0)
+        .setInteractive()
+        .setScrollFactor(0);
+    var cima = this.add
+        .image(750, 325, "cima", 0)
+        .setInteractive()
+        .setScrollFactor(0);
+    var baixo = this.add
+        .image(750, 400, "baixo", 0)
+        .setInteractive()
+        .setScrollFactor(0);
+
+    // Conectar no servidor via WebSocket
+    socket = io("https://hidden-brook-30522.herokuapp.com/");
+
+    // Escolha da sala antes de iniciar a partida
+    grade = this.add.tileSprite(400, 225, 600, 300, "grade").setScrollFactor(0);
+
+    mensagem = this.add
+        .text(100, 75, "Escolha uma sala para entrar:", {
+            fontFamily: "monospace",
+            font: "32px Courier",
+            fill: "#cccccc",
+        })
+        .setScrollFactor(0);
+
+    var salas = [
+        {
+            numero: "0",
+            x: 150,
+            y: 125,
+            botao: undefined,
+        },
+        {
+            numero: "1",
+            x: 150,
+            y: 175,
+            botao: undefined,
+        },
+        {
+            numero: "2",
+            x: 150,
+            y: 225,
+            botao: undefined,
+        },
+        {
+            numero: "3",
+            x: 150,
+            y: 275,
+            botao: undefined,
+        },
+        {
+            numero: "4",
+            x: 150,
+            y: 325,
+            botao: undefined,
+        },
+        {
+            numero: "5",
+            x: 450,
+            y: 125,
+            botao: undefined,
+        },
+        {
+            numero: "6",
+            x: 450,
+            y: 175,
+            botao: undefined,
+        },
+        {
+            numero: "7",
+            x: 450,
+            y: 225,
+            botao: undefined,
+        },
+        {
+            numero: "8",
+            x: 450,
+            y: 275,
+            botao: undefined,
+        },
+        {
+            numero: "9",
+            x: 450,
+            y: 325,
+            botao: undefined,
+        },
+    ];
+
+    salas.forEach((item) => {
+        item.botao = this.add
+            .text(item.x, item.y, "[Sala " + item.numero + "]", {
+                fontFamily: "monospace",
+                font: "32px Courier",
+                fill: "#cccccc",
+            })
+            .setInteractive()
+            .setScrollFactor(0);
+
+        item.botao.on("pointerdown", () => {
+            mensagem.setText("Aguardando segundo jogador...");
+            salas.forEach((item) => {
+                item.botao.destroy();
+            });
+            sala = item.numero;
+            console.log("Pedido de entrada na sala %s.", sala);
+            socket.emit("entrar-na-sala", sala);
+        });
+    })
+    
     //inventoryText.x = player1.body.position.x;
     //inventoryText.y = player1.body.position.y;
     //timerText.x = player1.body.position.x;

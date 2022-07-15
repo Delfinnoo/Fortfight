@@ -1,32 +1,32 @@
-{
-  "author": "Victor Delfino <paula.rn@aluno.ifsc.edu.br>",
-  "bugs": {
-    "url": "https://github.com/four-landia/Princesas-perdidas/issues"
-  },
-  "dependencies": {
-    "express": "^4.18.1",
-    "socket.io": "^4.5.1"
-  },
-  "description": "Servidor de jogo Web multijogador",
-  "engines": {
-    "node": ">=16.x"
-  },
-  "homepage": "https://github.com/four-landia/Princesas-perdidas#readme",
-  "keywords": [
-    "game",
-    "node",
-    "phaser",
-    "web"
-  ],
-  "license": "MIT",
-  "main": "servidor.js",
-  "name": "princesas-perdidas",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/four-landia/Princesas-perdidas"
-  },
-  "scripts": {
-    "start": "node servidor.js"
-  },
-  "version": "1.0.0"
+"name": "gravityfallsgame",
+"version": "0.1.0",
+"description": "Projeto desenvolvido na Oitava fase do integrado de Telecomunicações do IFSC São josé",
+"devDependencies": {
+  "nodemon": "^2.0.16"
+},
+"engines": {
+  "node": ">=16.x"
+},
+"main": "index.js",
+"scripts": {
+  "start": "node servidor.js",
+  "dev": "nodemon servidor.js"
+},
+"repository": {
+  "type": "git",
+  "url": "git+https://github.com/ifscgf/Gravity-Falls"
+},
+"author": "aahj",
+"license": "MIT",
+"bugs": {
+  "url": "https://github.com/ifscgf/Gravity-Falls/issues"
+},
+"homepage": "https://github.com/ifscgf/Gravity-Falls#readme",
+"dependencies": {
+  "express": "^4.18.1",
+  "socket.io": "^4.5.1"
+},
+"keywords": [
+  "gf"
+]
 }
